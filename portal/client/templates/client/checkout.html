@@ -1,0 +1,363 @@
+{% extends 'client/base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %} Thanh toán {% endblock %}
+{% block css %} {% endblock %}
+{% block content %}
+<div id="container-itself" style="min-height:940px;overflow-y:auto;">
+    <div id="content-itself">
+        <div class="container-fluid">
+            <div id="top-nav" style="width:100%">
+                <a class="active" href="#billing">Thanh toán</a>
+                <a href="#account_settings">Thiết lập tài khoản</a>
+                <a href="#security">Bảo mật</a>
+            </div>
+
+            <!-- tab billing -->
+
+            <div id="billing" class="hide active">
+                <div id="add_transaction">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <h3 style="margin-top: 0;padding-bottom:0;">Nạp tiền vào tài khoản</h3>
+                            <div class="input-group custom-container">
+                                <input class="amountcustom" name="amountcustom" placeholder="Nhập số tiền" size="12" style="border-radius: 4px 0 0 4px;line-height: 32px;width: 200px;" type="text" value="">
+                                <div class="input-group-addon">
+                                    VND
+                                </div>
+                            </div><a class="btn btn-primary" id="btn_add_transaction" onclick="add_transaction()" style="line-height: 24px;">Thêm thanh toán</a>
+                        </div>
+                    </form>
+                </div>
+                <h3 style="margin-top: 0px">Thông tin thanh toán</h3>
+                <table class="table" id="billing-info">
+                    <tbody>
+                        <tr>
+                            <th>Dư nợ</th>
+                            <th>Số tiền hoá đơn đã thanh toán</th>
+                            <th>Tiền trong tài khoản</th>
+                        </tr>
+                        <tr>
+                            <td><b>{{ user.money | intcomma }} (VND)</b></td>
+                            <td><b>{{ user.money | intcomma }} (VND)</b></td>
+                            <td><b>{{ user.money | intcomma }} (VND)</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--<h3>Mã voucher</h3>-->
+                <!--<div class="form-horizontal">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-sm-6 col-xs-12">-->
+                            <!--<input id="voucher_code" name="voucher_code" type="text" value="" placeholder="Nhập mã vouncher">-->
+                            <!--<button class="btn btn-success" id="add_voucher">Áp dụng voucher</button>-->
+                            <!--<div style="clear: both"></div>-->
+                            <!--<p style="padding: 10px 0;">Nhập mã CMCCLOUD300K nhận ngay 300.000 VNĐ vào tài khoản</p>-->
+                            <!--<div style="clear: both"></div>-->
+                            <!--<p style="padding: 10px 0;">* Mỗi tài khoản chỉ sử dung được 1 lần duy nhất</p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <h3>Lịch sử hóa đơn</h3>
+                <div class="fc-header-right" id="status_selector" style="padding-bottom: 15px;">
+                    <span class="label label-success arrowed-in-right arrowed pointer lbstatus" style="font-size:14px">Tất cả <span id="invoice_total">{{ orders | length }}</span></span> <span class="label label-default arrowed-in-right arrowed pointer lbstatus" style="font-size:14px">Paid <span id="invoice_paid">(0)</span></span> <span class="label label-default arrowed-in-right arrowed pointer lbstatus" style="font-size:14px">Chưa thanh toán <span id="invoice_unpaid">(0)</span></span> <span class="label label-default arrowed-in-right arrowed pointer lbstatus" style="font-size:14px">Quá hạn <span id="invoice_duedate">(0)</span></span>
+                </div>
+                <div style="clear: both"></div>
+                <div class="table-container" id="invoices">
+                    <table class="table" style="border-bottom-width: 1px; margin-bottom: 10px;">
+                        <tbody>
+                            <tr>
+                                <th><input type="checkbox"></th>
+                                <th>Số hóa đơn</th>
+                                <th>Số tiền</th>
+                                <th>Ngày tạo hóa đơn</th>
+                                <th>Ngày hết hạn</th>
+                                <th>Ngày thanh toán</th>
+                                <th>Tình trạng hóa đơn</th>
+                                <th>Xem / Tải về</th>
+                            </tr>
+                        </tbody>
+                        <tbody id="invoices_history">
+                            {% for or in orders %}
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>{{ or.id }}</td>
+                                <td>{{ or.price | intcomma }} (VND)</td>
+                                <td>{{ or.created | date:"d, m, Y" }}</td>
+                                <td>{{ or.deadline | date:"d, m, Y" }}</td>
+                                <td>{{ or.pay_date | date:"d, m, Y" }}</td>
+                                {% if or.status == 1 %}
+                                <td>Đã thanh toán</td>
+                                {% else %}
+                                <td>Chưa thanh toán</td>
+                                {% endif %}
+                                <td>Xem / Tải về</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div id="invoices_history_paging"></div>
+            </div>
+            <!-- end -->
+            
+            <!-- tab account -->
+            <div class="hide" id="account_settings">
+                <h3>Thiết lập tài khoản</h3>
+                <div class="box-header">
+                    Dữ liệu cá nhân
+                </div>
+                <form action="" class="form-horizontal ng-pristine ng-valid" id="updateInfoForm" name="updateInfoForm" method="POST">
+                    {% csrf_token %}
+                    <div class="box white billing-box">
+                        <div class="active">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input name="firstname" id="firstname" type="text" class="form-control" value="" placeholder="Họ (*)">
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="lastname" id="lastname" type="text" class="form-control" value="" placeholder="Tên (*)">
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="disabled" disabled id="email" class="form-control" name="email" style="background-color: #F7F7F9" type="text" value="" placeholder="Địa chỉ email (*):">
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="phonenumber" id="phonenumber" type="text" class="form-control" value="" placeholder="Số điện thoại (*):">
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="companyname" id="companyname" type="text" class="form-control" value="" placeholder="Công ty (không bắt buộc):">
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="dia_chi_dkkd" id="address-register" type="text" class="form-control" value="" placeholder="Địa chỉ đăng kí kinh doanh (không bắt buộc):">
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="ten_giam_doc" id="director" type="text" class="form-control" value="" placeholder="Tên giám đốc (không bắt buộc):">
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="ma_so_thue" type="text" id="tax-id" class="form-control" value="" placeholder="Mã số thuế (không bắt buộc):">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input name="address1" id="address1" type="text" value="" placeholder="Địa chỉ:">
+                                    </div>
+                                    <div class="form-group">
+                                        <select id="crs-country" class="crs-country" name="country">
+                                            <option value="0">
+                                                Quốc Gia
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                         <input name="city" id="city" type="text" value="" placeholder="Thành phố:">
+                                    </div>
+                                    <div class="form-group">
+                                        <select id="region" name="state">
+                                            <option value=0>
+                                                Tiểu bang / Tỉnh:
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control" id="timezone" name="timezone">
+                                            <option value="">
+                                                Múi giờ:
+                                            </option>
+                                            <option value="Etc/GMT+12|-12:00">
+                                                (GTM -12:00 ) Etc/GMT+12
+                                            </option>
+                                            <option value="Etc/GMT+11|-11:00">
+                                                (GTM -11:00 ) Etc/GMT+11
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="address2" id="address2" type="text" value="" placeholder="Địa chỉ 2:">
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="postcode" id="postcode" type="text" value="" placeholder="Mã bưu điện:">
+                                    </div>
+                                    <div class="form-group text-left">
+                                        <button class="btn btn-success" id="btUpdate" type="submit">Cập nhật</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div style="clear: both"></div>
+                    
+                <div class="row gutter-80 lowered-marign">
+                    <div class="col-lg-6">
+                        <div class="box-header text-center with-margin">
+                            Đổi mật khẩu
+                        </div>
+                        <div class="box white billing-box text-center">
+                            <div class="active">
+                                <div class="form-group">
+                                    <input id="current_password" type="password" value="" placeholder="Mật khẩu hiện tại:">
+                                </div>
+                                <div class="form-group">
+                                    <input id="new_password" type="password" value="" placeholder="Mật khẩu mới:">
+                                </div>
+                                <div class="form-group">
+                                    <input id="new_password2" type="password" value="" placeholder="Xác nhận mật khẩu mới:">
+                                </div>
+                                <div class="text-center">
+                                    <a class="btn btn-success" id="btChangePass">Đổi mật khẩu</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="col-lg-6">-->
+                        <!--<div class="box-header text-center with-margin">-->
+                            <!--Notifications-->
+                        <!--</div>-->
+                        <!--<div class="box white billing-box notification-box grey-text">-->
+                            <!--<div class="active">-->
+                                <!--<div class="row">-->
+                                    <!--<div class="col-xs-12 col-lg-8">-->
+                                        <!--<a href="#">Nhận email thông báo khi CPU vượt quá ngưỡng định trước</a>-->
+                                        <!--<label><input class="ng-pristine ng-untouched ng-valid ng-empty" type="checkbox"> Nhận email cảnh báo CPU</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-xs-12 col-lg-4 text-right">-->
+                                        <!--<a class="btn btn-success">Lưu</a>  -->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                        <!--</div>-->
+
+                        <!--<div class="box-header text-center with-margin">-->
+                            <!--Thông tin API-->
+                        <!--</div>-->
+                        <!--<div class="box white billing-box notification-box grey-text">-->
+                            <!--<div class="active">-->
+                                <!--<div id="panel_disabled" style="display:none;">-->
+                                    <!--<p style="margin-bottom: 15px;">API hiện đang bị vô hiệu hóa trên tài khoản của bạn.</p>-->
+                                    <!--<div class="text-center">-->
+                                        <!--<a class="btn btn-success">Cho phép sử dụng API</a>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div id="panel_enabled" style="color: white;">-->
+                                    <!--<div class="row">-->
+                                        <!--<div class="col-xs-12 col-lg-8">-->
+                                            <!--<p style="margin-bottom: 15px;">API truy cập hiện đang được kích hoạt  trên tài khoản của bạn.</p>-->
+                                            <!--API Key: <span class="label label-default" id="api_key">az9vCcdvwhIixt6z7hxBroRAdiVtU0</span>-->
+                                        <!--</div>-->
+                                        <!--<div class="col-xs-12 col-lg-4 text-right">-->
+                                            <!--<a class="btn btn-success">Vô hiệu hóa API</a>  -->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </div>
+            </div>
+            <!-- end -->
+            
+            <!-- tab security -->
+            <div class="hide" id="security">
+                <div class="row gutter-80">
+                    <!--<div class="col-xs-12 col-lg-6">-->
+                        <!--<h3>Bảo mật</h3>-->
+                        <!--<div class="box white margin-bottom" id="two-factor">-->
+                            <!--<h4><span class="square-icon"></span> Xác minh hai bước</h4>-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-xs-12">-->
+                                    <!--<p>Với xác minh 2 bước, bất cứ khi nào bạn đăng nhập vào tài khoản Google của bạn, bạn sẽ cần</p>-->
+                                    <!--<ol class="rounded-list">-->
+                                        <!--<li><span>Mật khẩu của bạn</span></li>-->
+                                        <!--<li><span>Một mã mà Google Authenticator ứng dụng sẽ tạo ra cho bạn</span></li>-->
+                                    <!--</ol>-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-12 text-right">-->
+                                    <!--<a class="btn btn-success" href="enable-two-factor">Kích hoạt xác thực 2 bước</a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <div class="col-xs-12 col-lg-6">
+                        <h3>SSH Keys</h3>
+                        <div class="box white margin-bottom" id="add-an-ssh">
+                            <div id="keypairs">
+                                <!--<div class="row">-->
+                                    <!--<div class="col-sm-3 the-key">-->
+                                        <!--sonnv-20190102-023723-->
+                                    <!--</div>-->
+                                    <!--<div class="col-sm-4 the-key">-->
+                                        <!--ca:0c:14:d9:7a:ad:06:45:9b:ee:65:e3:96:22:c2:42-->
+                                    <!--</div>-->
+                                    <!--<div class="col-sm-5 text-right">-->
+                                        <!--<button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i> Delete</button>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="delimeter-3"></div>-->
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 text-right">
+                                    <!--<button class="btn btn-success" data-toggle="modal" data-target="#sshkey">Thêm SSH Key</button>-->
+                                </div>
+                                <div class="col-xs-12 col-sm-6 text-right">
+                                    <button class="btn btn-success" data-toggle="modal" data-target="#sshkey">Thêm SSH Key</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Lịch sử bảo mật</h3>
+                <div class="table-responsive">
+                    <div>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th class="text-left">Thao tác</th>
+                                    <th class="text-left">Thời gian</th>
+                                </tr>
+                            </tbody>
+                            <tbody id="security-history">
+                                <!-- Hiển thị thao tác nếu thao tác thành công -->
+                                <tr><td>Create keypair sonnv-20190102-023723</td><td>(171.241.75.203) 2019-01-02 02:37:23</td></tr>
+                                <!-- end -->
+                            </tbody>
+                        </table>
+                        <div id="security-history_paging"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end -->
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="sshkey">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content ">
+                <div class="modal-header">
+                    <h4 class="modal-title">Tạo mới key</h4>
+                </div>
+                <div class="modal-body form-group">
+                    <input class="form-control" type="text" placeholder="key pair Name" name="sshkeyname" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" value="OK" id="sshkey_submit" >Tạo</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_sshkey">Đóng</button>
+                </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %} 
+    <script>
+        $(document).ready(function () {
+            $('#left-menu').find('li').removeClass('selected')
+            $('.checkout').addClass('selected')
+        })
+
+    </script>
+    <script src="{% static 'js/client/checkout.js' %}"></script>
+{% endblock %}

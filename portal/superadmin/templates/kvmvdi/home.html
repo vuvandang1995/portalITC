@@ -1,0 +1,157 @@
+{% extends "kvmvdi/base.html" %}
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-title">
+                <h4>OpenStack System</h4>
+            </div>
+            <div class="card-body" style="margin-left:2em;margin-right:2em;">
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Name</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="text" name="name" class="form-control ops_data" value="{{ops.name}}" disabled data-last="{{ops.name}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">IP address</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="text" name="ip" class="form-control ops_data" value="{{ops.ip}}" disabled data-last="{{ops.ip}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Username</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="text" name="username" class="form-control ops_data" value="{{ops.username}}" disabled data-last="{{ops.username}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Password</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="password" name="password" class="form-control ops_data" value="" disabled data-last="">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Project name</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="text" name="project" class="form-control ops_data" value="{{ops.project}}" disabled  data-last="{{ops.project}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">User domain</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="text" name="userdomain" class="form-control ops_data" value="{{ops.userdomain}}" disabled  data-last="{{ops.userdomain}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Project domain</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="text" name="projectdomain" class="form-control ops_data" value="{{ops.projectdomain}}" disabled  data-last="{{ops.projectdomain}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Disk hdd</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="text" name="disk_hdd" class="form-control ops_data" value="{{ops.disk_hdd}}" disabled  data-last="{{ops.disk_hdd}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Disk sdd</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="text" name="disk_ssd" class="form-control ops_data" value="{{ops.disk_ssd}}" disabled  data-last="{{ops.disk_ssd}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Role admin</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="text" name="role_admin" class="form-control ops_data" value="{{ops.role_admin}}" disabled  data-last="{{ops.role_admin}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Role user</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="text" name="role_user" class="form-control ops_data" value="{{ops.role_user}}" disabled  data-last="{{ops.role_user}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Network provider</label>
+                    </div>
+                    <div class="col-12 col-md-10" id="net_provider">
+                        {% for net in net_provider %}
+                        <div class="row">
+                            <div class="col-md-9">
+                                <input type="text" name="net_provider" class="form-control ops_data" value="{{net}}" disabled  data-last="{{net}}">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-danger del" style="display: none;">
+                                    Xóa
+                                </button>
+                                <button type="button" class="btn btn-success add" style="display: none;">
+                                    Thêm
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-id="{{ops.id}}" id="edit">
+                        Chỉnh sửa
+                    </button>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-6">
+
+                    </div>
+                    <div class="col col-md-3">
+                        <button type="button" class="btn btn-success btn-block" style="display: none;" data-toggle="modal" data-id="{{ops.id}}" id="save">
+                            Lưu
+                        </button>
+                    </div>
+                    <div class="col col-md-3">
+                        <button type="button" class="btn btn-warning btn-block" style="display: none;" data-toggle="modal" data-id="{{ops.id}}" id="cancel">
+                            Hủy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        var net_provider = [];
+        {% for net in net_provider %}
+        net_provider.push('{{net}}');
+        {% endfor %}
+    </script>
+    <script src="{% static 'js/superadmin/home.js' %}"></script>
+{% endblock %}

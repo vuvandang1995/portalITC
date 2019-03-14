@@ -1,0 +1,22 @@
+{% load static %}
+{% if option == 'row'%}
+    {% for key in ls_key %}
+        <div class="row">
+            <div class="col-sm-9 the-key">
+                {{ key.name }}
+            </div>
+            <!--<div class="col-sm-4 the-key">-->
+                <!--ca:0c:14:d9:7a:ad:06:45:9b:ee:65:e3:96:22:c2:42-->
+            <!--</div>-->
+            <div class="col-sm-3 text-right">
+                <button class="btn btn-danger btn-xs del_ssh" data-id="{{key.id}}" data-name="{{key.name}}"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+            </div>
+        </div>
+        <div class="delimeter-3"></div>
+    {% endfor %}
+{% else %}
+    <option value="0">Không</option>
+    {% for key in ls_key %}
+    <option value="{{key.id}}">{{key.name}}</option>
+    {% endfor %}
+{% endif %}

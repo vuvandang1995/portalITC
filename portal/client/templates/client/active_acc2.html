@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    {% load staticfiles %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Xác thực email</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'css/AdminLTE.css' %}">
+</head>
+
+<body class="hold-transition login-page">
+    <div class="container" id="info_user">
+        <div class="login-box">
+            <div class="login-logo">
+                <a href="/">
+                    <img src="{% static 'images/intercom.png' %}">
+                </a>
+            </div>
+            <!-- /.login-logo -->
+            <div class="login-box-body">
+                <div class="tab-content">
+                    <div id="home">
+                        <div class="login-logo">
+                            <a href="#">
+                                <img src="{% static 'images/verify.png' %}" width="50%" height="50%">
+                            </a>
+                        </div>
+                        <div style="text-align: center;">
+                            <h3 style="font-size: 45px;"> Xác thực !</h3>
+                            <p>{{ content }} ! Tài khoản cuản bạn đã xác thực thành công </p>
+                            <a href="{% url 'client:login' %}" style="text-decoration: none"><button class="btn btn-primary">Trở về trang chủ</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.login-box-body -->
+        </div>
+
+        <!-- jQuery 3 -->
+        <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+        <!-- Bootstrap 3.3.7 -->
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <!-- iCheck -->
+        <!-- <script src="{% static 'user_interface/plugins/iCheck/icheck.min.js' %}"></script> -->
+
+        <!-- <script src="{% static 'js/validate.js' %}"></script> -->
+</body>
+
+</html>

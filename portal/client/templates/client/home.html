@@ -1,0 +1,279 @@
+{% extends 'client/base.html' %}
+{% load staticfiles %}
+{% block title %} Tạo VM {% endblock %}
+{% block css %} {% endblock %}
+{% block content %}
+<div id="container-itself" style="min-height:940px;">
+    <div id="content-itself">
+        {% if not user.is_block %}
+        <div class="container-fluid">
+            <style>
+                .tooltip-inner{
+                    max-width: 400px !important;
+                    text-align: left;
+                }
+                .btn.disabled_opacity{
+                    opacity: 0.3;
+                }
+                .btn-group .btn{
+                    margin-left: 0px !important;
+                }
+            </style>
+            <h3 class="label-header">
+                <span class="border-label">Máy ảo của tôi</span>
+                <div class="col-lg-4 col-md-5 searchvmbox">
+                    <div class="input-group">
+                        <input type="text" id="smart_search" placeholder="Tìm kiếm..." class="form-control">
+                        <span style="vertical-align: top;" class="input-group-btn" onclick="search()">
+                            <button type="button" class="btn btn-gradient btn-home-search">Tìm kiếm</button>
+                        </span>
+                    </div>
+                </div>
+            </h3>
+            <div style="clear:both"></div>
+            <div class="table-responsive" id="vms_container" style="width:100%;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th class="hideonmobile">Hệ điều hành</th>
+                            <th>Main IP</th>
+                            <th class="hideonmobile">Datacenter</th>
+                            <th class="hideonmobile" style="width:100px">Trạng thái</th>
+                            <th class="hideonmobile">Ngày tạo</th>
+                            <th class="hideonmobile" style="width: 170px;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="maintable">
+                        <tr>
+                            <td colspan="7">
+                                Đang tải ...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="maintable_paging"></div>
+            </div><a class="btn btn-success" href="{% url 'client:setup' %}" style="margin-top: 0px;">Tạo máy ảo mới</a>
+            <div class="box icons text-center">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-4 col-lg-2 one-icon">
+                        <a href="">
+                            <img src="{% static 'images/icon-snapshot.png'%}" alt="icon" class="img-responsive center-block">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-lg-2 one-icon">
+                        <a href="">
+                            <img src="{% static 'images/icon-volume.png'%}" alt="icon" class="img-responsive center-block">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-lg-2 one-icon">
+                        <a href="">
+                            <img src="{% static 'images/icon-backup.png'%}" alt="icon" class="img-responsive center-block">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-lg-2 one-icon">
+                        <a href="">
+                            <img src="{% static 'images/icon-log.png'%}" alt="icon" class="img-responsive center-block">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-lg-2 one-icon">
+                        <a href="">
+                            <img src="{% static 'images/icon-security.png'%}" alt="icon" class="img-responsive center-block">
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+
+
+            <div class="modal" id="snapshot">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content ">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Create Snapshot</h4>
+                            </div>
+                            <div class="modal-body form-group">
+                                <input type="hidden" value="" name="svip">
+                                <input type="hidden" value="" name="project">
+                                <input class="form-control" type="text" placeholder="Snapshot Name" name="snapshotname" required>
+
+                                <div><font id="invalid-msg" color="red" size="5"></font></div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" value="OK" id="snapshot_submit" >Create</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_snapshot">Close</button>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal" id="sshkey">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content ">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Create key pair</h4>
+                        </div>
+                        <div class="modal-body form-group">
+                            <input type="hidden" value="" name="svip">
+                            <input type="hidden" value="" name="project">
+                            <input class="form-control" type="text" placeholder="key pair Name" name="sshkeyname" required>
+
+                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" value="OK" id="sshkey_submit" >Create</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_sshkey">Close</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+            <div class="modal" id="resetpass">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content ">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Update the admin password</h4>
+                        </div>
+                        <div class="modal-body form-group">
+                            <input type="hidden" value="" name="svip">
+                            <input type="hidden" value="" name="project">
+                            <input class="form-control" type="password" placeholder="New password" name="resetpass" required>
+                            <br>
+                            <label><b>Repeat Password</b></label>
+                            <input class="form-control" type="password" placeholder="Repeat password" name="password2" required>
+
+                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" value="OK" id="resetpass_submit" >Create</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_resetpass">Close</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+            <div class="modal" id="rebuild">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content ">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Rebuild Instance</h4>
+                        </div>
+                        <div class="modal-body form-group">
+                            <input type="hidden" value="" name="svip">
+                            <input type="hidden" value="" name="project">
+                            <label><b>Select image</b></label><br>
+                                <select name="image" class="form-control" id="mySelect_image_rebuild">
+
+                                </select>
+
+                            <br>
+                                <select name="mySelect_type" class="form-control" id="mySelect_type">
+                                    <option value="AUTO">Auto</option>
+                                    <option value="MANUAL">Manual</option>
+                                </select>
+
+                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" value="OK" id="rebuild_submit" >Submit</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_rebuild">Close</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+            <div class="modal" id="backup">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content ">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Backup name</h4>
+                        </div>
+                        <div class="modal-body form-group">
+                            <input type="hidden" value="" name="svip">
+                            <input type="hidden" value="" name="project">
+                            <input class="form-control" type="text" placeholder="Backup Name" name="backupname" required>
+                            <br>
+                            <select name="backup_type" class="form-control" id="mySelect_backup_type">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                            <br>
+
+                            <label><b>Count</b></label>
+                            <input type="number" name="rotation" min="1" max="50" required value="1" style="width: 60px">
+
+                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" value="OK" id="backup_submit" >Create</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_backup">Close</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+            <h3 style="margin-top: 30px;text-transform: uppercase;font-weight: bold;"><span class="border-label">Tin tức</span></h3>
+            <div class="box news" id="news">
+                <div class="owl-carousel" id="news-slider">
+                    <div class="one-news">
+                        <h4><a>Thông báo nâng cấp Network tại DC Hồ Chí Minh</a></h4>
+                        <p class="date">2018-02-07 11:58:00</p>
+                        <p class="news-text"></p>
+                        <p>Nhằm mục đích nâng cao chất lượng hệ thống Network, nâng cao năng lực cung cấp và tăng cường khả năng đáp ứng cao (High Availability) của toàn bộ hệ thống CMC Cloud Server đặt tại DC Hồ Chí Minh, chúng tôi sẽ tiến hành nâng cấp Uplink của hệ thống như sau:</p>
+                        <ul>
+                            <li><strong>Thời gian tiến hành</strong>: 23h ngày thứ Bảy – 10/02/2018</li>
+                            <li><strong>Downtime Network</strong>: 2 phút (120 giây)</li>
+                            <li><strong>Phạm vi ảnh hưởng</strong>: Toàn bộ hệ thống bao gồm tất cả các VMs nằm trên DC tại Hồ Chí Minh. Các VM, Server.. vẫn vận hành bình thường tuy nhiên không có kết nối internet ra ngoài.</li>
+                        </ul>Xem thêm chi tiết <a href="">tại đây</a>:&nbsp;<a href="">Nâng cấp hệ thống Network tại DC HCM ngày 10/02/2018</a>
+                    </div>
+                    <div class="one-news">
+                        <h4><a>Thông báo nâng cấp Network tại DC Hồ Chí Minh</a></h4>
+                        <p class="date">2018-02-07 11:58:00</p>
+                        <p class="news-text"></p>
+                        <p>Nhằm mục đích nâng cao chất lượng hệ thống Network, nâng cao năng lực cung cấp và tăng cường khả năng đáp ứng cao (High Availability) của toàn bộ hệ thống CMC Cloud Server đặt tại DC Hồ Chí Minh, chúng tôi sẽ tiến hành nâng cấp Uplink của hệ thống như sau:</p>
+                        <ul>
+                            <li><strong>Thời gian tiến hành</strong>: 23h ngày thứ Bảy – 10/02/2018</li>
+                            <li><strong>Downtime Network</strong>: 2 phút (120 giây)</li>
+                            <li><strong>Phạm vi ảnh hưởng</strong>: Toàn bộ hệ thống bao gồm tất cả các VMs nằm trên DC tại Hồ Chí Minh. Các VM, Server.. vẫn vận hành bình thường tuy nhiên không có kết nối internet ra ngoài.</li>
+                        </ul>Xem thêm chi tiết <a href="">tại đây</a>:&nbsp;<a href="">Nâng cấp hệ thống Network tại DC HCM ngày 10/02/2018</a>
+                    </div>
+                    <div class="one-news">
+                        <h4><a>Thông báo nâng cấp Network tại DC Hồ Chí Minh</a></h4>
+                        <p class="date">2018-02-07 11:58:00</p>
+                        <p class="news-text"></p>
+                        <p>Nhằm mục đích nâng cao chất lượng hệ thống Network, nâng cao năng lực cung cấp và tăng cường khả năng đáp ứng cao (High Availability) của toàn bộ hệ thống CMC Cloud Server đặt tại DC Hồ Chí Minh, chúng tôi sẽ tiến hành nâng cấp Uplink của hệ thống như sau:</p>
+                        <ul>
+                            <li><strong>Thời gian tiến hành</strong>: 23h ngày thứ Bảy – 10/02/2018</li>
+                            <li><strong>Downtime Network</strong>: 2 phút (120 giây)</li>
+                            <li><strong>Phạm vi ảnh hưởng</strong>: Toàn bộ hệ thống bao gồm tất cả các VMs nằm trên DC tại Hồ Chí Minh. Các VM, Server.. vẫn vận hành bình thường tuy nhiên không có kết nối internet ra ngoài.</li>
+                        </ul>Xem thêm chi tiết <a href="">tại đây</a>:&nbsp;<a href="">Nâng cấp hệ thống Network tại DC HCM ngày 10/02/2018</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <h3 style="margin-top: 0px">Tài khoản của bạn đã hết thời gian dùng thử.</h3>
+        <h3 style="margin-top: 0px">Hãy thanh toán hóa đơn để tiếp tục sử dụng dịch vụ.</h3>
+        <h3 style="margin-top: 0px">Thân !</h3>
+        {% endif %}
+    </div>
+</div>
+<div class="clearfix"></div>
+{% csrf_token %}
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $('#left-menu').find('li').removeClass('selected')
+            $('.vm').addClass('selected')
+        })
+    </script>
+
+    <script src="{% static 'js/client/home.js' %}"></script>
+{% endblock %}

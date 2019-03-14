@@ -1,0 +1,8 @@
+{% autoescape off %}
+Xin chào {{ user.fullname }},
+Thông tin server của bạn là:
+Public IP: {{IP_Public}}
+Private IP: {{IP_Private}}
+Key pair: {{Key_pair}}
+Tai khoan login: root/{{Pass_Login}}
+{% endautoescape %}

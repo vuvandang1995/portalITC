@@ -1,0 +1,74 @@
+{% extends "kvmvdi/base.html" %}
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-title">
+                <h4>Giá cho thuê máy chủ (VND)</h4>
+            </div>
+            <div class="card-body" style="margin-left:2em;margin-right:2em;">
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Ram</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="number" min="500" max="100000000" step="500" name="ram" class="form-control price_data" value="{{price.ram}}" disabled data-last="{{price.ram}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">VCPU</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="number" min="500" max="100000000" step="500"  name="vcpus" class="form-control price_data" value="{{price.vcpus}}" disabled data-last="{{price.vcpus}}">
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Disk HDD</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="number" min="500" max="100000000" step="500"  name="disk_hdd" class="form-control price_data" value="{{price.disk_hdd}}" disabled  data-last="{{price.disk_hdd}}">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-2">
+                        <label class=" form-control-label">Disk SSD</label>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <input type="number" min="500" max="100000000" step="500"  name="disk_ssd" class="form-control price_data" value="{{price.disk_ssd}}" disabled  data-last="{{price.disk_ssd}}">
+                    </div>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-info btn-block" data-toggle="modal" id="edit">
+                        Chỉnh sửa
+                    </button>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-6">
+
+                    </div>
+                    <div class="col col-md-3">
+                        <button type="button" class="btn btn-success btn-block" style="display: none;" id="save">
+                            Lưu
+                        </button>
+                    </div>
+                    <div class="col col-md-3">
+                        <button type="button" class="btn btn-warning btn-block" style="display: none;" id="cancel">
+                            Hủy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/superadmin/prices.js' %}"></script>
+{% endblock %}

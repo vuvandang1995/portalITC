@@ -1,0 +1,25 @@
+{% extends "kvmvdi/base.html" %}
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-title">
+                <h4>Danh sách image</h4>
+                <button class="btn btn-primary" style="float:right" id="update">Update images</button>
+            </div>
+            <div class="card-body" style="margin-left:2em;margin-right:2em;">
+                {% for im in images %}
+                <p>{{forloop.counter}}.{{im.name}}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/superadmin/images.js' %}"></script>
+{% endblock %}

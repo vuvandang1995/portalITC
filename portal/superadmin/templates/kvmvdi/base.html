@@ -1,0 +1,109 @@
+<html lang="en"><head>
+    {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon.png' %}">
+    <title>Admin</title>
+
+    <link href="{% static 'css/base-css/bootstrap-css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/base-css/helper.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/base-css/style.css' %}" type="text/css">
+    {% block css %}{% endblock %}
+</head>
+
+<body class="mini-sidebar">
+    <!-- Main wrapper  -->
+    <div id="main-wrapper">
+        <!-- header header  -->
+        <div class="header">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- Logo -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'superadmin:home' %}">
+                        <span><img src="{% static 'images/intercom.png' %}" alt="homepage" style="width:200px;height:40px;"></span>
+                    </a>
+                </div>
+                <!-- End Logo -->
+                <div class="navbar-collapse">
+                    <!-- toggle and nav items -->
+                    <ul class="navbar-nav mr-auto mt-md-0">
+                        <!-- This is  -->
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted  " href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
+                        <li class="nav-item m-l-10"> <a class="nav-link sidebartoggler hidden-sm-down text-muted  " href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
+                    </ul>
+                    <!-- User profile and search -->
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- Profile -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{% static 'images/avatar.png' %}" alt="user" class="profile-pic"></a>
+                            <div class="dropdown-menu dropdown-menu-right animated zoomIn">
+                                <ul class="dropdown-user">
+                                    <li><a href="{% url 'superadmin:profile' %}"><i class="fa fa-key"></i> Thay đổi mật khẩu</a></li>
+                                    <li><a href="{% url 'client:logout' %}"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!-- End header header -->
+        <!-- Left Sidebar  -->
+        <div class="left-sidebar" style="overflow: visible;">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar" style="overflow-x: visible; overflow-y: hidden;">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="nav-devider"></li>
+                        <li><a class="" href="{% url 'superadmin:home' %}" aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Thông tin OpenStack</span></a></li>
+                        <li><a class="" href="{% url 'superadmin:images' %}" aria-expanded="false"><i class="fa fa-cloud-upload"></i><span class="hide-menu">Quản lý image</span></a></li>
+                        <li><a class="" href="{% url 'superadmin:prices' %}" aria-expanded="false"><i class="fa fa-money"></i><span class="hide-menu">Quản lý giá</span></a></li>
+                        <li><a class="" href="{% url 'superadmin:profile' %}" aria-expanded="false"><i class="fa fa-key"></i><span class="hide-menu">Thay đổi mật khẩu</span></a></li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </div>
+        <!-- End Left Sidebar  -->
+        <!-- Page wrapper  -->
+        <div class="page-wrapper" style="min-height: 918px;">
+            <!-- Bread crumb -->
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-primary">Intercom</h3> </div>
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">Intercom</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- End Bread crumb -->
+            <!-- Container fluid  -->
+            <div class="container-fluid">
+                <!-- Start Page Content -->
+                {% block content %}
+                {% endblock %}
+                <!-- End PAge Content -->
+            </div>
+            <!-- footer -->
+            <footer class="footer"> © 2018 All rights reserved. Template designed by <a href="https://colorlib.com">Colorlib</a></footer>
+            <!-- End footer -->
+        </div>
+        <!-- End Page wrapper  -->
+    </div>
+    <script src="{% static 'js/base-js/jquery.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/base-js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/base-js/jquery.slimscroll.js' %}"></script>
+    <script src="{% static 'js/base-js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'js/base-js/scripts.js' %}"></script>
+    <script src="{% static 'js/base-js/sticky-kit.min.js' %}"></script>
+    <script src="{% static 'js/sweetalert2.all.min.js' %}" type="text/javascript"></script>
+    {% block js %} {% endblock%}
+</body></html>

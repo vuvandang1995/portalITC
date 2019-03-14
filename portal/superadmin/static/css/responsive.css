@@ -1,0 +1,135 @@
+@media all and (max-width: 1199px) {
+	.one-icon:before {
+		content: none;
+	}
+	.one-icon .item-bg {
+	    border-radius: 0;
+	    position: relative;
+	    padding: 50px;
+	}
+	.one-icon {
+		border: 0;
+	}
+	.one-icon .item-bg {
+		padding: 20px;
+	}
+    form#updateInfoForm .form-group {
+        margin: 0;
+    }
+    form#updateInfoForm #btUpdate {
+        width: 100%;
+    }
+}
+
+@media all and (max-width: 768px) {
+    .one-icon .sprite4 {
+        width: 50px;
+        height: 50px;
+    }
+	#news_paging {
+	    padding: 15px 20px;
+	}
+}
+@media all and (max-width: 480px) {
+    .one-icon .sprite4 {
+        width: 70px;
+        height: 70px;
+    }
+   	.one-icon {
+    	margin-bottom: 0;
+	}
+}
+@media all and (max-width: 400px) {
+    .one-icon .sprite4 {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media all and (min-width: 992px) {
+    .box.icons {
+        position: relative;
+    }
+    .box.icons:before {
+        content: "";
+        background-color: #0f72ff;
+        height: 12px;
+        width: 12px;
+        position: absolute;
+        top: 50%;
+        transform:translateY(-50%);
+        left: 0;
+        z-index: 10;
+    }
+    .box.icons:after {
+        content: "";
+        background-color: #0f72ff;
+        height: 12px;
+        width: 12px;
+        position: absolute;
+        top: 50%;
+        transform:translateY(-50%);
+        right: 0;
+        z-index: 10;
+    }
+    .one-icon {
+        padding: 10px 30px;
+        width: 20%;
+    }
+    .one-icon:before {
+        content: "";
+        background-color: #0f72ff;
+        height: 2px;
+        width: 100%;
+        position: absolute;
+        top: 50%;
+        transform:translateY(-50%);
+        left: 0;
+        right: 0;
+        z-index: 10;
+    }
+}
+
+@media all and (min-width: 1200px) {
+    #two-factor {
+        padding-right: 80px;
+    }
+}
+@media all and (min-width: 1400px) {
+    .box.news{
+        margin: 0 -35px;
+    }
+    .one-news {
+        padding: 0 35px;
+    }
+    .gutter-80.row {
+        margin-right: -40px;
+        margin-left: -40px; }
+
+    .gutter-80 > [class^="col-"] {
+        padding-right: 40px;
+        padding-left: 40px; }
+    .notification-box .btn {
+        padding: 6px 40px;
+    }
+    .billing-box   .row{
+        margin-left: -80px;
+        margin-right:-80px;
+    }
+
+    .billing-box   .row > div{
+        padding-left: 80px;
+        padding-right:80px;
+    }
+
+    .gutter-100.row {
+        margin-right: -50px;
+        margin-left: -50px; }
+
+    .gutter-100 > [class^="col-"] {
+        padding-right: 50px;
+        padding-left: 50px; }
+    .os-padding {
+        padding: 0 80px;
+    }
+}

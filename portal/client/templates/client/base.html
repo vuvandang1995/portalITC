@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title %} {% endblock %}</title>
+    <meta charset="UTF-8">
+    {% load staticfiles %}
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{% static 'css/bootstrap4.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/owl.carousel.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet" type="text/css">
+    {% block css %} {% endblock %}
+</head>
+
+<body style="cursor: auto;">
+    <!-- mobile menu -->
+    <div class="mobilemenu showonmobile">
+        <div class="container" style="text-align: center">
+            <button class="expand-menu" onclick="$('#left-menu').toggle()" type="button"><span></span></button>
+            <div class="logo">
+                <a href="/"><img src="{% static 'images/logo.png' %}" style="height: 50px"></a>
+            </div>
+            <div class="box-admin">
+                <ul>
+                    <li>
+                        <a onclick="$('.popmenu').toggle()"><i class="glyphicon glyphicon-user"></i></a>
+                        <div class="popmenu popmenu-right">
+                            <ul>
+                                <li>
+                                    <a href="" style="border-bottom: 1px solid #e5e5e5;"><i class="fa fa-sign-in"></i>Logout</a>
+                                </li>
+                                <li>
+                                    <a href=""><i class="fa fa-edit"></i>Hoá don</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div><!-- end -->
+    <!-- header -->
+    <div id="header">
+        <div id="lower-header">
+            <a href="{% url 'client:home' %}" style="float: left;">
+                <div style="margin-top: 5px;padding-left: 135px;"><img src="{% static 'images/logo.png' %}"></div>
+            </a>
+            <div id="welcome">
+                <span><span class="menu-trigger"><span style="font-weight:normal">Chào mừng,</span>{{ content }}</span></span>
+                <div class="dropdown-menu-absolute">
+                    <a href="">Tickets của tôi</a> <a href="">Hóa đơn chưa thanh toán</a> <a href="/checkout#account_settings">Thiết lập tài
+                        khoản</a> <a href="{% url 'client:logout' %}">Ðăng xuất</a>
+                </div>
+                <div class="sprite triangle-os" style="font-size: 11px;"></div>
+            </div>
+            <div id="upper-header">
+                <ul>
+                    <li>
+                        <a href="">TRANG CHỦ</a>
+                    </li>
+                    <li>
+                        <a href="">TRỢ GIÚP VÀ HỖ TRỢ</a>
+                    </li>
+                    <li>
+                        <a href="tel:19002010">Hotline 24/7: 1900.2010</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </div><!-- end -->
+    <!-- body -->
+    <div id="content" style="position:relative">
+        <div id="left-menu" style="margin-right: 0px; padding-right: 0px;position:absolute;top:-60px;bottom:0">
+            <ul>
+                <li style="height: 60px;line-height: 30px;background-color: #f5f5f5;">
+                    <a class="lang" href="" style="display: inline;color: #4c4d4f;" title="Vietnamese">VN</a> | <a
+                        class="lang" href="" style="padding-left: 0px;display: inline;color: #4c4d4f;" title="English">EN</a>
+                </li>
+                <li class="vm selected">
+                    <a href="{% url 'client:home' %}"><img alt="#" src="{% static 'images/VM.svg' %}"></a> <a href="{% url 'client:home' %}">VM</a>
+                </li>
+                <li class="setup">
+                    <a href="{% url 'client:setup' %}"><img alt="#" src="{% static 'images/Deploy.svg' %}"></a> <a href="{% url 'client:setup' %}">Tạo mới</a>
+                </li>
+                <!--<li class="vpc">-->
+                    <!--<a href=""><img alt="#" src="{% static 'images/VPC.svg' %}"></a> <a href="">VPC</a>-->
+                <!--</li>-->
+                <li class="checkout">
+                    <a href="{% url 'client:checkout' %}"><img alt="#" src="{% static 'images/Billing.svg' %}"></a> 
+                    <a href="{% url 'client:checkout' %}">Thanh toán</a>
+                </li>
+            </ul>
+        </div>
+        {% block content %} {% endblock %}
+    </div>
+
+    <div class="modal fade in add-key-modal" id="confirm-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><span style="color:red;font-weight:bold;">Backup this Private key to your
+                            local!</span></h4>
+                </div>
+                <div class="modal-body form-group">
+                    <div class="modal-description">-----BEGIN RSA PRIVATE KEY-----<br>In ra SSH Key ở đây</div>
+                    <div style="display: none; margin-top: 20px; clear: both; height: 33px;" class="restrict">
+                        <input type="text" class="form-control txtAgree" required="" regex="[oO][kK]" placeholder="OK"
+                            data-validation-regex-regex="OK" data-validation-regex-message="Must enter OK to confirm this action"
+                            style="width: 80px; display: block; float: left; margin-top: 0px;">
+                        <p style="float: left; margin-top: 10px; margin-left: 10px;" class="">Type OK to process</p>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default cancel" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger danger confirm btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade in add-key-modal" id="confirm-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><span style="color:green"><i class="glyphicon glyphicon-thumbs-up"></i>
+                            Success!</span></h4>
+                </div>
+                <div class="modal-body">Create keypair successful</div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger danger confirm btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- end -->
+    <!-- footer -->
+    <div id="footer">
+        <div id="copy">
+            <div class="row">
+                <div class="col-xs-12 col-md-6 block-left">
+                    <span><img src="{% static 'images/logo-ft.png' %}" class="img-responsive" alt="logo"> © 2018 Intercom - CÔNG TY CỔ PHẦN VIỄN THÔNG INTERCOM VIỆT NAM</span>
+                </div>
+                <div class="col-xs-12 col-md-6 block-right">
+                    <span>Điện thoại:(024) 6329 9001 - (024) 3766 8131<br>
+                          Email:support@intercom.vn</span>
+                </div>
+            </div>
+        </div>
+    </div><!-- end -->
+    <script src="{% static 'js/jquery-2.1.4.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/validate-bootstrap.jquery.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/sweetalert2.all.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/app.js' %}" type="text/javascript"></script>
+    <script>
+        var userName = '{{ user.username }}';
+        var opsSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/' + userName + '/');
+
+        opsSocket.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            var message = data['message'];
+            if (message == 'Da xoa xong'){
+                setTimeout(function(){
+                    $('#maintable').load(location.href + "_data");
+                }, 8000);
+            }else{
+                setTimeout(function(){
+                    $('#maintable').load(location.href + "_data");
+                }, 500);
+            }
+            /*$("#success").html(message).removeClass("hide").hide().fadeIn()
+            setTimeout(function(){
+                $("#success").fadeOut("slow");
+            }, 6000);*/
+        };
+    </script>
+    {% block js %} {% endblock %}
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $('#top-nav a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+                $('#top-nav a').removeClass('active');
+                $(this).addClass('active');
+                return false;
+            });
+
+            // $('#left-menu a').click(function (e) {
+            //     e.preventDefault()
+            //     $("#left-menu li").removeClass('selected')
+            //     console.log($(this).parent('li'))
+            //     $(this).parent('li').addClass('selected')
+            // })
+        });
+    </script>
+
+</body>
+
+</html>
